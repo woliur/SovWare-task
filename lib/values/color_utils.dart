@@ -5,6 +5,7 @@ class ColorUtils {
   static var black = Pigment.fromString("#000000");
   static var black_161616 = Pigment.fromString("#161616");
   static var white = Pigment.fromString("#FFFFFF");
+  static var blue = Pigment.fromString("#0000FF");
   static var grey_9B9B9B = Pigment.fromString("#9B9B9B");
   // ignore: non_constant_identifier_names
   static var grey_B8B8B8 = Pigment.fromString("#B8B8B8");
