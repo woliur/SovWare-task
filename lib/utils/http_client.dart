@@ -1,113 +1,110 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' as io;
-
+import 'dart:io' as IO;
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:sovware/values/string.dart';
+import 'network.dart';
 import 'toastutils.dart';
 
 class HttpClient {
-  static Future<dynamic> get(String url, dynamic parameters,
-      {String token = ''}) async {
+  static Future<dynamic> get(
+      String url, dynamic parameters) async {
     try {
-      Dio dio = await _dioClient(token);
+      Dio dio = await _dioClient();
       Response response = await dio.get(url, queryParameters: parameters);
       return _response(response);
-    } on DioError {
-      ToastUtils.showError('check internet connection');
+    } catch (e) {
+      return Future.error(e);
     }
   }
 
-  static Future<dynamic> post(String url, dynamic parameters, dynamic body,
-      {String token = ''}) async {
+  static Future<Dio> _dioClient() async {
     try {
-      Dio dio = await _dioClient(token);
-      Response response =
-          await dio.post(url, queryParameters: parameters, data: body);
-      return _response(response);
-    } on DioError {
-      ToastUtils.showError('check internet connection');
+      bool network = await Network.instance.checkNetwork();
+      if (!network) {
+        throw (StringAsset.internetError);
+      }
+      Dio dio = Dio(await _options());
+      if (!kReleaseMode) {
+        dio.interceptors.add(PrettyDioLogger(
+            requestHeader: true,
+            requestBody: true,
+            responseBody: true,
+            responseHeader: false,
+            error: true,
+            compact: true,
+            maxWidth: 90));
+      }
+      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+          (IO.HttpClient client) {
+        client.badCertificateCallback =
+            (IO.X509Certificate cert, String host, int port) => true;
+      };
+      return dio;
+    } catch (e) {
+      print(e);
+      return Future.error(e);
     }
   }
 
-  static Future<dynamic> upload(String url, dynamic body,
-      {String token = ''}) async {
-    try {
-      Dio dio = await _dioClient(token);
-      Response response = await dio.post(
-        url,
-        data: FormData.fromMap(body),
-      );
-      return _response(response);
-    } on DioError {
-      ToastUtils.showError('check internet connection');
-    }
-  }
-
-  static Future<Dio> _dioClient(String token) async {
-    Dio dio = Dio(await _options(token));
-    dio.interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: true,
-        error: true,
-        compact: true,
-        maxWidth: 90,
-      ),
-    );
-    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-        (io.HttpClient client) {
-      client.badCertificateCallback =
-          (io.X509Certificate cert, String host, int port) => true;
-    };
-    return dio;
-  }
-
-  static Future<BaseOptions> _options(String token) async {
+  static Future<BaseOptions> _options() async {
     return BaseOptions(
       connectTimeout: 50000,
       receiveTimeout: 50000,
-      followRedirects: true,
+      followRedirects: false,
+      responseType: ResponseType.plain,
+      contentType: 'application/json',
       validateStatus: (status) {
-        return status! < 500;
-      },
-      headers: {
-        'Authorization': "Bearer " + token,
+        return status! <= 500;
       },
     );
   }
 
-  static dynamic _response(Response response) {
-    dynamic responseJson;
+  static dynamic _response(Response response) async {
+    var responseJson;
     switch (response.statusCode) {
       case 200:
         responseJson = json.decode(response.toString());
         return responseJson;
+        break;
       case 201:
         responseJson = json.decode(response.toString());
         return responseJson;
-      case 412:
+        break;
+      case 400:
         responseJson = json.decode(response.toString());
-        return responseJson;
+        throw (responseJson);
+        break;
       case 401:
-        throw Exception(response.data["message"]);
+        responseJson = json.decode(response.toString());
+        throw (responseJson);
+        break;
       case 403:
-        throw Exception(response.data["message"]);
+        throw ("403");
+        break;
       case 404:
-        throw Exception(response.data["message"]);
-      case 417:
-        throw Exception(response.data["message"]);
-      case 422:
-        throw Exception(response.data["message"]);
+        responseJson = json.decode(response.toString());
+        if (response.data["message"] != null) {
+          throw (response.data["message"]);
+        }
+        throw ('Not Found Error!');
+        break;
       case 500:
-        throw Exception('Server Error!');
-      case 503:
-        throw Exception('Server Error!');
+        throw ('Server Error!');
+        break;
+      case 422:
+        responseJson = json.decode(response.toString());
+        if (response.data["message"] != null) {
+          throw (response.data["message"]);
+        }
+        throw ('422');
+        break;
       default:
-        throw Exception('Unknown Error!');
+        throw ('Unknown Error!');
+        break;
     }
   }
 }
