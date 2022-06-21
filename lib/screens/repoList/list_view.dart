@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sovware/screens/repoList/single_item.dart';
 import 'package:sovware/values/color_utils.dart';
 import 'package:sovware/values/string.dart';
 import 'package:sovware/widgets/loading_view.dart';
@@ -28,7 +29,7 @@ class RepoList extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: 10,
-      itemBuilder: (context, index) => Text(provider.repoList[index].name.toString()),
+      itemBuilder: (context, index) => SingleItem(items: provider.repoList[index], onTap: () {provider.navigateToDetails(provider.repoList[index]);},),
     );
   }
 }

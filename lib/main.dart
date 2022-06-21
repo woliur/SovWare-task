@@ -3,7 +3,13 @@ import 'package:oktoast/oktoast.dart';
 import 'package:sovware/screens/repoList/list_view.dart';
 import 'package:sovware/values/color_utils.dart';
 
-void main() {
+import 'db/object_box.dart';
+
+late ObjectBox objectbox;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  objectbox = await ObjectBox.create();
   runApp(const MyApp());
 }
 

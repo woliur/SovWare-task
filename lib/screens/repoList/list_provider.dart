@@ -1,17 +1,24 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sovware/models/git_repo_response.dart';
+import 'package:sovware/screens/repoDetails/details_view.dart';
 import 'package:sovware/utils/http_client.dart';
 import 'package:sovware/utils/urls.dart';
 import 'package:sovware/values/string.dart';
+
+// dataList = objectbox.store.box<WishListModel>().getAll();
+// var cartListBox = objectbox.store.box<AddToCartModel>();
+// cartListBox.put(_dataList[index]);
 
 class RepoListProvider extends ChangeNotifier {
 
   List<Items> repoList = [];
   bool loading = true;
+  BuildContext? context;
 
-  RepoListProvider(BuildContext context) {
-    getRepoList(context);
+  RepoListProvider(BuildContext contx) {
+    context = contx;
+    getRepoList(contx);
   }
 
   Future getRepoList(BuildContext context) async {
@@ -29,6 +36,10 @@ class RepoListProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  void navigateToDetails(Items item){
+    Navigator.of(context!).push(MaterialPageRoute(builder: (context) => Details(items: item,),));
   }
 
 }
