@@ -20,7 +20,7 @@ class RepoList extends StatelessWidget {
           appBar: AppBar(
             actions: [
               IconButton(
-                  onPressed: () => value.sortByStarDescending(),
+                  onPressed: () => value.sortRepo(),
                   icon: Icon(Icons.sort))
             ],
             title: const Text(StringAsset.listTitle),
@@ -31,33 +31,6 @@ class RepoList extends StatelessWidget {
       ),
     );
   }
-  //
-  // Widget _mainView(RepoListProvider provider) {
-  //   if (provider.repoList.isNotEmpty) {
-  //     return SingleChildScrollView(
-  //       physics: ScrollPhysics(),
-  //       child: RefreshIndicator(
-  //         onRefresh: () => provider.getRepoList(),
-  //         child: ListView.builder(
-  //           scrollDirection: Axis.vertical,
-  //           shrinkWrap: true,
-  //           physics: AlwaysScrollableScrollPhysics(),
-  //           itemCount: 40,
-  //           itemBuilder: (context, index) => SingleItem(
-  //             items: provider.repoList[index],
-  //             onTap: () {
-  //               provider.navigateToDetails(
-  //                   provider.repoList[index], provider.hasNetwork);
-  //             },
-  //             hasNetwork: provider.hasNetwork,
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   } else {
-  //     return EmptyView(message: StringAsset.noRepoMessage);
-  //   }
-  // }
 
   Widget _mainView(RepoListProvider provider) {
     if (provider.repoList.isNotEmpty) {

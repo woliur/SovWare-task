@@ -16,6 +16,7 @@ class RepoListProvider extends ChangeNotifier {
   List<DbItems> repoList = [];
   bool loading = true;
   bool hasNetwork = true;
+  bool sort = true;
   BuildContext? context;
 
   RepoListProvider(BuildContext contx) {
@@ -68,13 +69,22 @@ class RepoListProvider extends ChangeNotifier {
     }
   }
 
+  void sortRepo(){
+    if(sort){
+      sortByStarDescending();
+    } else {
+      sortByStarAscending();
+    }
+  }
+
   void sortByStarAscending(){
     loading = true;
     notifyListeners();
     if(repoList.isNotEmpty){
-      repoList.sort((a, b) => a.stargazersCount!.compareTo(b.stargazersCount!));
+      repoList.sort((b, a) => a.stargazersCount!.compareTo(b.stargazersCount!));
     }
     loading = false;
+    sort = true;
     notifyListeners();
   }
 
@@ -85,6 +95,7 @@ class RepoListProvider extends ChangeNotifier {
       repoList.sort((a, b) => a.stargazersCount!.compareTo(b.stargazersCount!));
     }
     loading = false;
+    sort = false;
     notifyListeners();
   }
 
