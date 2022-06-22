@@ -1,6 +1,6 @@
 
 
-import '../objectbox.g.dart';
+import 'objectbox.g.dart';
 
 class ObjectBox {
   /// The Store of this app.
