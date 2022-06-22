@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sovware/screens/repoList/single_item.dart';
 import 'package:sovware/values/color_utils.dart';
 import 'package:sovware/values/string.dart';
+import 'package:sovware/widgets/empty_view.dart';
 import 'package:sovware/widgets/loading_view.dart';
 
 import 'list_provider.dart';
@@ -14,22 +15,70 @@ class RepoList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => RepoListProvider(context),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(StringAsset.listTitle),
-        ),
+      child: Consumer<RepoListProvider>(
+        builder: (context, value, child) => Scaffold(
+          appBar: AppBar(
+            actions: [
+              IconButton(
+                  onPressed: () => value.sortByStarDescending(),
+                  icon: Icon(Icons.sort))
+            ],
+            title: const Text(StringAsset.listTitle),
+          ),
           backgroundColor: ColorUtils.primary,
-          body: Consumer<RepoListProvider>(builder: (context, value, child) => value.loading ? LoadingView() : _mainView(value),)),
+          body: value.loading ? LoadingView() : _mainView(value),
+        ),
+      ),
     );
   }
+  //
+  // Widget _mainView(RepoListProvider provider) {
+  //   if (provider.repoList.isNotEmpty) {
+  //     return SingleChildScrollView(
+  //       physics: ScrollPhysics(),
+  //       child: RefreshIndicator(
+  //         onRefresh: () => provider.getRepoList(),
+  //         child: ListView.builder(
+  //           scrollDirection: Axis.vertical,
+  //           shrinkWrap: true,
+  //           physics: AlwaysScrollableScrollPhysics(),
+  //           itemCount: 40,
+  //           itemBuilder: (context, index) => SingleItem(
+  //             items: provider.repoList[index],
+  //             onTap: () {
+  //               provider.navigateToDetails(
+  //                   provider.repoList[index], provider.hasNetwork);
+  //             },
+  //             hasNetwork: provider.hasNetwork,
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   } else {
+  //     return EmptyView(message: StringAsset.noRepoMessage);
+  //   }
+  // }
 
-  Widget _mainView(RepoListProvider provider){
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: 10,
-      itemBuilder: (context, index) => SingleItem(items: provider.repoList[index], onTap: () {provider.navigateToDetails(provider.repoList[index]);},),
-    );
+  Widget _mainView(RepoListProvider provider) {
+    if (provider.repoList.isNotEmpty) {
+      return SingleChildScrollView(
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: provider.repoList.length,
+          itemBuilder: (context, index) => SingleItem(
+            items: provider.repoList[index],
+            onTap: () {
+              provider.navigateToDetails(
+                  provider.repoList[index], provider.hasNetwork);
+            },
+            hasNetwork: provider.hasNetwork,
+          ),
+        ),
+      );
+    } else {
+      return EmptyView(message: StringAsset.noRepoMessage);
+    }
   }
 }

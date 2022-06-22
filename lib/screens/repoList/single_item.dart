@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:sovware/models/git_repo_response.dart';
-import 'package:sovware/utils/date_formate_util.dart';
+import 'package:sovware/db/itemModel.dart';
 import 'package:sovware/values/color_utils.dart';
+import 'package:sovware/values/image_assets.dart';
 
 class SingleItem extends StatelessWidget {
-  const SingleItem({Key? key, required this.items, required this.onTap}) : super(key: key);
-  final Items items;
+  const SingleItem({Key? key, required this.hasNetwork,  required this.items, required this.onTap}) : super(key: key);
+  final DbItems items;
   final VoidCallback onTap;
+  final bool hasNetwork;
 
   @override
   Widget build(BuildContext context) {
@@ -74,11 +75,11 @@ class SingleItem extends StatelessWidget {
   Widget _secondRow() {
     return Row(
       children: [
-        _avaterWidget(items.owner!.avatarUrl.toString()),
+        _avaterWidget(items.avatarUrl.toString()),
         const SizedBox(
           width: 8,
         ),
-        nameText(items.owner!.login.toString()),
+        nameText(items.login.toString()),
       ],
     );
   }
@@ -86,7 +87,7 @@ class SingleItem extends StatelessWidget {
   Widget _avaterWidget(String img) {
     return ClipOval(
       child: SizedBox.fromSize(// Image radius
-          child: Image.network(img, height: 20, width: 20,)
+          child: hasNetwork? Image.network(img, height: 20, width: 20,) : Image.asset(ImageAssets.AVATER, height: 20, width: 20,)
       ),
     );
   }

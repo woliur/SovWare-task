@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:sovware/models/git_repo_response.dart';
+import 'package:sovware/db/itemModel.dart';
 import 'package:sovware/utils/date_formate_util.dart';
 import 'package:sovware/values/color_utils.dart';
+import 'package:sovware/values/image_assets.dart';
 
 class Details extends StatelessWidget {
-  const Details({Key? key, required this.items}) : super(key: key);
-  final Items items;
+  const Details({Key? key, required this.items, required this.hasNetwork}) : super(key: key);
+  final DbItems items;
+  final bool hasNetwork;
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +25,9 @@ class Details extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _userPicture(items.owner!.avatarUrl.toString()),
+            _userPicture(items.avatarUrl.toString()),
             SizedBox(height: 16,),
-            _nameText(items.owner!.login.toString()),
+            _nameText(items.login.toString()),
             SizedBox(height: 16,),
             _descriptionText(items.description.toString()),
             SizedBox(height: 16,),
@@ -43,7 +45,7 @@ class Details extends StatelessWidget {
   Widget _userPicture(String image){
     return ClipOval(
       child: SizedBox.fromSize(// Image radius
-          child: Image.network(image, height: 168, width: 168,)
+          child: hasNetwork? Image.network(image, height: 168, width: 168,) : Image.asset(ImageAssets.AVATER, height: 168, width: 168,)
       ),
     );
   }

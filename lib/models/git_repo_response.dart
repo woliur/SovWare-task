@@ -28,7 +28,7 @@ class GitRepoResponse {
 }
 
 class Items {
-  int? id;
+  int? repoId;
   String? nodeId;
   String? name;
   String? fullName;
@@ -108,7 +108,7 @@ class Items {
   double? score;
 
   Items(
-      {this.id,
+      {this.repoId,
         this.nodeId,
         this.name,
         this.fullName,
@@ -188,7 +188,7 @@ class Items {
         this.score});
 
   Items.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    repoId = json['id'];
     nodeId = json['node_id'];
     name = json['name'];
     fullName = json['full_name'];
@@ -271,7 +271,7 @@ class Items {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
+    data['id'] = this.repoId;
     data['node_id'] = this.nodeId;
     data['name'] = this.name;
     data['full_name'] = this.fullName;

@@ -4,4 +4,5 @@ class StringAsset {
   static const internetError = "No Internet Found!";
   static const dataError = "No Data Found!";
   static const q = "Flutter";
+  static const noRepoMessage = "No Repository Found! Check your Internet";
 }
