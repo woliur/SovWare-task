@@ -1,16 +1,16 @@
 # sovware
 
-A new Flutter project.
+A new Flutter project for the SovWare
 
-## Getting Started
+this project is made with flutter dev recommanded state management pattern "provider". because of the provider pretty much do everything for a screen, no seperate repository folder is needed. 
 
-This project is a starting point for a Flutter application.
+Under the lib folder, there 6 sub folder maintained here
 
-A few resources to get you started if this is your first Flutter project:
+1. db - database related generated file and model. N.B "objectbox" is used as the database.
+2. models - the data models which is fetched from network
+3. screens - here the visible screens are kept along with the provider file.
+4. utils - every utility like network library, toast etc are kept here
+5. values - the assats file like strings, image are kept here
+6. widgets - the assisting widget like, loading view, which can be used more then once are kept here
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
