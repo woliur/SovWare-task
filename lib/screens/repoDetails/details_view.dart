@@ -13,7 +13,11 @@ class Details extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorUtils.grey_333333,
-      appBar: AppBar(title: Text(items.name.toString()),),
+      appBar: AppBar(
+        title: Text(items.name.toString()),
+        elevation: 3,
+        backgroundColor: ColorUtils.grey_404040,
+      ),
       body: _body(),
     );
   }

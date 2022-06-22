@@ -20,10 +20,18 @@ class RepoList extends StatelessWidget {
           appBar: AppBar(
             actions: [
               IconButton(
-                  onPressed: () => value.sortRepo(),
-                  icon: Icon(Icons.sort))
+                  onPressed: () => value.getRepoList(),
+                  icon: Icon(Icons.refresh)),
+              Visibility(
+                visible: value.repoList.isNotEmpty,
+                child: IconButton(
+                    onPressed: () => value.sortRepo(),
+                    icon: Icon(Icons.sort)),
+              )
             ],
             title: const Text(StringAsset.listTitle),
+            elevation: 3,
+            backgroundColor: ColorUtils.grey_404040,
           ),
           backgroundColor: ColorUtils.primary,
           body: value.loading ? LoadingView() : _mainView(value),
@@ -51,7 +59,7 @@ class RepoList extends StatelessWidget {
         ),
       );
     } else {
-      return EmptyView(message: StringAsset.noRepoMessage);
+      return EmptyView(message: StringAsset.noRepoMessage, onTap: () => provider.getRepoList(),);
     }
   }
 }

@@ -25,7 +25,7 @@ class RepoListProvider extends ChangeNotifier {
   }
 
 
-  Future<void> getRepoList() async {
+  Future getRepoList() async {
     loading = true;
     notifyListeners();
     hasNetwork = await Network.instance.checkNetwork();
@@ -98,8 +98,6 @@ class RepoListProvider extends ChangeNotifier {
     sort = false;
     notifyListeners();
   }
-
-
 
   void navigateToDetails(DbItems item, bool hasNetwork){
     Navigator.of(context!).push(MaterialPageRoute(builder: (context) => Details(items: item,hasNetwork: hasNetwork,),));
